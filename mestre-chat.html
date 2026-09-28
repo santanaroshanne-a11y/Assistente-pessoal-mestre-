@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<link rel="manifest" href="/manifest.webmanifest">\n<meta name="theme-color" content="#0a0a12">\n<link rel="apple-touch-icon" href="/icons/icon-192.svg">
 <title>Mestre — Chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -353,6 +353,23 @@
   document.querySelectorAll('.user-chip').forEach(chip=>chip.addEventListener('click',()=>{
     document.querySelectorAll('.user-chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');
   }));
+  let deferredInstallPrompt=null;
+  const installBtn=document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault(); deferredInstallPrompt=event;
+    if(installBtn) installBtn.hidden=false;
+  });
+  if(installBtn) installBtn.addEventListener('click',async()=>{
+    if(!deferredInstallPrompt)return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    installBtn.hidden=true;
+  });
+  window.addEventListener('appinstalled',()=>{if(installBtn)installBtn.hidden=true;});
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+  }
   const messages=[];
   function addMessage(role,text){
     const row=document.createElement('div');
