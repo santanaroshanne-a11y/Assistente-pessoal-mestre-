@@ -1,5 +1,5 @@
 const CACHE_NAME='mestre-pwa-v1';
-const APP_SHELL=['/','/mestre-chat.html','/manifest.webmanifest','/icons/icon-192.svg','/icons/icon-512.svg'];
+const APP_SHELL=['/','/mestre-chat.html','/manifest.webmanifest','/icons/icon-192.svg','/icons/icon-512.svg','/configuracoes.html'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
 });
